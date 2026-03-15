@@ -1,0 +1,1 @@
+# apigateway-private-integration-patterns
