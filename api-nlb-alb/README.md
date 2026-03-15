@@ -1,20 +1,48 @@
 # API Gateway dual-route test stack
 
-This Terraform project creates a quick validation stack for two API Gateway paths against the same Lambda backend:
+### Architecture Note
 
-#### NOTE: The Lambda backend is used purely as a lightweight test target to validate connectivity and routing. In real-world deployments, the ALB would typically route traffic to application services (for example EKS services behind an ingress controller).
+This example demonstrates the pattern:
+`
+API Gateway → VPC Link → NLB → ALB → Lambda
+`
 
-- `/{proxy+}` via **API Gateway HTTP API -> VPC Link -> internal ALB -> Lambda**
+This pattern is included only for comparison with an existing design. For modern API Gateway HTTP API private integrations, a simpler architecture is usually preferred:
+`
+API Gateway → VPC Link → ALB → backend service
+`
+Adding an NLB in front of the ALB introduces:
+
+- an additional network hop
+- extra operational complexity
+- higher cost and latency
+- no functional benefit for this scenario
+
+Therefore, the NLB layer is unnecessary in this demo architecture.
+
+The Lambda backend is used purely as a lightweight test target to validate connectivity and routing. In real-world deployments, the ALB would typically route traffic to application services (for example EKS services behind an ingress controller).
+
+This folder exists only to illustrate the architectural difference between:
+
+Option A (Legacy / Existing)
+API GW → VPC Link → NLB → ALB → Service
+
+Option B (Recommended)
+API GW → VPC Link → ALB → Service
+
+
+API Gateway → VPC Link → ALB
+
+- `/{proxy+}` via **API Gateway HTTP API -> VPC Link -> internal NLB -> internal ALB -> Lambda**
 - `/direct/{proxy+}` via **API Gateway HTTP API -> Lambda direct integration**
 
 ## What this proves
 
 - API Gateway route matching
-- VPC Link forwarding through ALB
+- VPC Link forwarding through NLB and ALB
 - Direct Lambda integration from the same API Gateway
 - Header, path, and auth-header visibility for both routes
 - A clean side-by-side comparison between the two patterns
-- A simple stand-in for the real production pattern: **API Gateway -> VPC Link -> ALB ingress -> EKS services**
 
 ## Prerequisites
 
@@ -25,7 +53,7 @@ This Terraform project creates a quick validation stack for two API Gateway path
 ## Deploy
 
 ```bash
-cd api-alb 
+cd api-nlb-alb
 terraform init
 terraform apply
 ```

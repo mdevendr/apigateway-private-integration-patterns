@@ -2,7 +2,7 @@
 
 This Terraform project creates a quick validation stack for two API Gateway paths against the same Lambda backend:
 
-#### NOTE: The Lambda backend is used purely as a lightweight test target to validate connectivity and routing. In real-world deployments, the ALB would typically route traffic to application services (for example EKS services behind an ingress controller).
+NOTE: The Lambda backend is used purely as a lightweight test target to validate connectivity and routing. In real-world deployments, the ALB would typically route traffic to application services (for example EKS services behind an ingress controller).
 
 - `/{proxy+}` via **API Gateway HTTP API -> VPC Link -> internal ALB -> Lambda**
 - `/direct/{proxy+}` via **API Gateway HTTP API -> Lambda direct integration**
@@ -25,7 +25,7 @@ This Terraform project creates a quick validation stack for two API Gateway path
 ## Deploy
 
 ```bash
-cd api-alb 
+cd apigw-vpclink-nlb-alb-lambda-test
 terraform init
 terraform apply
 ```
