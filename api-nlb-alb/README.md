@@ -1,16 +1,14 @@
-# API Gateway dual-route test stack
-
 ### Architecture Note
 
 This example demonstrates the pattern:
-`
+```bash
 API Gateway → VPC Link → NLB → ALB → Lambda
-`
+```
 
 This pattern is included only for comparison with an existing design. For modern API Gateway HTTP API private integrations, a simpler architecture is usually preferred:
-`
+```bash
 API Gateway → VPC Link → ALB → backend service
-`
+```
 Adding an NLB in front of the ALB introduces:
 
 - an additional network hop
@@ -23,7 +21,7 @@ Therefore, the NLB layer is unnecessary in this demo architecture.
 The Lambda backend is used purely as a lightweight test target to validate connectivity and routing. In real-world deployments, the ALB would typically route traffic to application services (for example EKS services behind an ingress controller).
 
 This folder exists only to illustrate the architectural difference between:
-
+```bash
 Option A (Legacy / Existing)
 API GW → VPC Link → NLB → ALB → Service
 
@@ -35,7 +33,7 @@ API Gateway → VPC Link → ALB
 
 - `/{proxy+}` via **API Gateway HTTP API -> VPC Link -> internal NLB -> internal ALB -> Lambda**
 - `/direct/{proxy+}` via **API Gateway HTTP API -> Lambda direct integration**
-
+```
 ## What this proves
 
 - API Gateway route matching
